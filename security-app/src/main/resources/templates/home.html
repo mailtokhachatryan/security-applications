@@ -1,0 +1,6 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Security application</title><link rel="stylesheet" th:href="@{/assets/app.css}"></head>
+<body><main><h1>Security application</h1><p>Choose a resource to view. Your account permissions control access.</p>
+<nav><a th:href="@{/info}">Application stats</a><a th:href="@{/admin}">Administration</a><a th:href="@{/admin/blocked-users}">Blocked accounts</a><a th:href="@{/sign-out}">Sign out</a></nav>
+</main></body></html>

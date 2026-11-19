@@ -1,0 +1,16 @@
+:root { font-family: "Instrument Sans", system-ui, sans-serif; color: #152a39; background: #edf1ef; }
+body { margin: 0; padding: 5vh 24px; }
+main { box-sizing: border-box; max-width: 640px; margin: 5vh auto; background: #fff; padding: 40px; border: 1px solid #d5dfd9; border-radius: 16px; }
+h1 { font-size: 2rem; letter-spacing: -.04em; margin-top: 0; }
+p { line-height: 1.6; }
+.eyebrow { color: #45675d; font-size: .85rem; }
+label { display: block; margin: 20px 0 8px; font-weight: 600; }
+input, textarea { box-sizing: border-box; width: 100%; padding: 12px; border: 1px solid #9dafaa; border-radius: 6px; font: inherit; }
+textarea { min-height: 180px; resize: vertical; }
+button { display: block; margin: 24px 0; border: 0; border-radius: 6px; background: #185545; padding: 12px 24px; color: #fff; font: inherit; cursor: pointer; }
+button:hover { background: #103e32; }
+a { color: #185545; overflow-wrap: anywhere; }
+nav { display: flex; gap: 18px; flex-wrap: wrap; }
+pre { padding: 16px; background: #f1f5f3; white-space: pre-wrap; overflow-wrap: anywhere; font-family: inherit; }
+[role="alert"] { color: #8b2424; }
+@media (max-width: 520px) { main { padding: 24px; } }

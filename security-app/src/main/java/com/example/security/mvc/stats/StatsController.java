@@ -27,6 +27,11 @@ class StatsController {
 		return new ApplicationInfo("Security application");
 	}
 
+	@GetMapping("/admin")
+	ApplicationInfo admin() {
+		return new ApplicationInfo("Administration");
+	}
+
 	record Stats(String application, int activeUsers, Instant generatedAt) {
 	}
 
