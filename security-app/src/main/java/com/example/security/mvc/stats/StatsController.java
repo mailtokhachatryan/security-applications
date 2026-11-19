@@ -22,6 +22,11 @@ class StatsController {
 		return new Stats("MVC application", random.nextInt(1000), clock.instant());
 	}
 
+	@GetMapping("/about")
+	ApplicationInfo about() {
+		return new ApplicationInfo("Security application");
+	}
+
 	record Stats(String application, int activeUsers, Instant generatedAt) {
 	}
 

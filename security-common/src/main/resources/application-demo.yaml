@@ -1,0 +1,11 @@
+demo:
+  users:
+    - email: info@example.com
+      password: ${DEMO_INFO_PASSWORD}
+      permissions: [VIEW_INFO, STANDARD]
+    - email: admin@example.com
+      password: ${DEMO_ADMIN_PASSWORD}
+      permissions: [VIEW_INFO, VIEW_ADMIN, STANDARD]
+    - email: member@example.com
+      password: ${DEMO_MEMBER_PASSWORD}
+      permissions: [STANDARD]
