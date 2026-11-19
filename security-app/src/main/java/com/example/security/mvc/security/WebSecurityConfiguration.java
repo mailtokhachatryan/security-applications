@@ -1,8 +1,9 @@
 package com.example.security.mvc.security;
 
+import com.example.security.common.login.EmailAuthenticationProvider;
+import com.example.security.common.login.SecuritySupport;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -10,12 +11,13 @@ import org.springframework.security.web.SecurityFilterChain;
 class WebSecurityConfiguration {
 
 	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		return http.authorizeHttpRequests(requests -> requests
-				.requestMatchers("/about").permitAll()
-				.anyRequest().authenticated())
-				.formLogin(form -> form.usernameParameter("email").defaultSuccessUrl("/info", true))
-				.httpBasic(Customizer.withDefaults())
+	SecurityFilterChain securityFilterChain(HttpSecurity http, EmailAuthenticationProvider provider) throws Exception {
+		return SecuritySupport.configure(http, provider)
+				.authorizeHttpRequests(requests -> requests
+						.requestMatchers("/about", "/login", "/assets/**", "/error").permitAll()
+						.requestMatchers("/info").hasAuthority("VIEW_INFO")
+						.requestMatchers("/admin", "/admin/**").hasAuthority("VIEW_ADMIN")
+						.anyRequest().authenticated())
 				.build();
 	}
 }
