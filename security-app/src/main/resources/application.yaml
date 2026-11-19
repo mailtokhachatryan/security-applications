@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: security-app
+app:
+  email: ${APP_EMAIL}
+  password: ${APP_PASSWORD}
