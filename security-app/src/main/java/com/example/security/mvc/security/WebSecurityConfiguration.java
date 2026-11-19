@@ -12,6 +12,7 @@ class WebSecurityConfiguration {
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http.authorizeHttpRequests(requests -> requests
+				.requestMatchers("/about").permitAll()
 				.anyRequest().authenticated())
 				.formLogin(form -> form.usernameParameter("email").defaultSuccessUrl("/info", true))
 				.httpBasic(Customizer.withDefaults())

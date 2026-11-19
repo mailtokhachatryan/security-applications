@@ -1,19 +1,19 @@
 package com.example.security.common.login;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.example.security.common.account.AccountRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import java.time.Clock;
 import java.util.Locale;
 
 @Configuration(proxyBeanMethods = false)
-class BasicAuthenticationConfiguration {
+class DatabaseAuthenticationConfiguration {
 
 	@Bean
 	PasswordEncoder passwordEncoder() {
@@ -21,10 +21,11 @@ class BasicAuthenticationConfiguration {
 	}
 
 	@Bean
-	UserDetailsService users(@Value("${app.email}") String email, @Value("${app.password}") String password,
-			PasswordEncoder encoder) {
-		return new InMemoryUserDetailsManager(User.withUsername(email.strip().toLowerCase(Locale.ROOT))
-				.password(encoder.encode(password)).authorities("AUTHENTICATED").build());
+	UserDetailsService users(AccountRepository accounts) {
+		return email -> accounts.findByEmail(email.strip().toLowerCase(Locale.ROOT))
+				.map(account -> User.withUsername(account.getEmail()).password(account.getPasswordHash())
+						.authorities("AUTHENTICATED").build())
+				.orElseThrow(() -> new UsernameNotFoundException("Account is unavailable."));
 	}
 
 	@Bean
