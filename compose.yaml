@@ -1,0 +1,67 @@
+services:
+  security-db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: security
+      POSTGRES_USER: security
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD}
+    volumes:
+      - security-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U security -d security"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+  secrets-db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: secrets
+      POSTGRES_USER: security
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD}
+    volumes:
+      - secrets-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U security -d secrets"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+  security-app:
+    build:
+      context: .
+      args:
+        APP_MODULE: security-app
+    environment:
+      SPRING_PROFILES_ACTIVE: demo
+      DB_URL: jdbc:postgresql://security-db:5432/security
+      DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD}
+      DEMO_INFO_PASSWORD: ${DEMO_INFO_PASSWORD:?Set DEMO_INFO_PASSWORD}
+      DEMO_ADMIN_PASSWORD: ${DEMO_ADMIN_PASSWORD:?Set DEMO_ADMIN_PASSWORD}
+      DEMO_MEMBER_PASSWORD: ${DEMO_MEMBER_PASSWORD:?Set DEMO_MEMBER_PASSWORD}
+    ports:
+      - "127.0.0.1:${SECURITY_PORT:-8080}:8080"
+    depends_on:
+      security-db:
+        condition: service_healthy
+  secret-providers:
+    build:
+      context: .
+      args:
+        APP_MODULE: secret-providers
+    environment:
+      SPRING_PROFILES_ACTIVE: demo
+      DB_URL: jdbc:postgresql://secrets-db:5432/secrets
+      DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD}
+      DEMO_INFO_PASSWORD: ${DEMO_INFO_PASSWORD:?Set DEMO_INFO_PASSWORD}
+      DEMO_ADMIN_PASSWORD: ${DEMO_ADMIN_PASSWORD:?Set DEMO_ADMIN_PASSWORD}
+      DEMO_MEMBER_PASSWORD: ${DEMO_MEMBER_PASSWORD:?Set DEMO_MEMBER_PASSWORD}
+      SECRET_ENCRYPTION_KEY: ${SECRET_ENCRYPTION_KEY:?Set SECRET_ENCRYPTION_KEY}
+      SECRET_PUBLIC_BASE_URL: ${SECRET_PUBLIC_BASE_URL:-http://localhost:8081}
+    ports:
+      - "127.0.0.1:${SECRETS_PORT:-8081}:8081"
+    depends_on:
+      secrets-db:
+        condition: service_healthy
+
+volumes:
+  security-data:
+  secrets-data:
